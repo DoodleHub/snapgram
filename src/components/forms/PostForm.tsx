@@ -79,6 +79,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
     navigate('/');
   }
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   return (
     <Form {...form}>
       <form
@@ -151,9 +155,15 @@ const PostForm = ({ post, action }: PostFormProps) => {
           )}
         />
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" className="shad-button_dark_4">
-            Cancel
-          </Button>
+          {action === 'Update' && (
+            <Button
+              type="button"
+              className="shad-button_dark_4"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          )}
           <Button
             type="submit"
             className="shad-button_primary whitespace-nowrap"
