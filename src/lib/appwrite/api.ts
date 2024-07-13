@@ -4,6 +4,7 @@ import { account, appwriteConfig, avatars, databases, storage } from './config';
 
 import { INewPost, INewUser, IUpdatePost } from '@/types';
 
+// Auth APIs
 export async function createUserAccount(user: INewUser) {
   try {
     const newAccount = await account.create(
@@ -66,26 +67,6 @@ export async function signInAccount(user: { email: string; password: string }) {
   }
 }
 
-export async function getCurrentUser() {
-  try {
-    const currentAccount = await account.get();
-
-    if (!currentAccount) throw Error;
-
-    const currentUser = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.userCollectionId,
-      [Query.equal('accountId', currentAccount.$id)]
-    );
-
-    if (!currentUser) throw Error;
-
-    return currentUser.documents[0];
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export async function signOutAccount() {
   try {
     const session = await account.deleteSession('current');
@@ -96,6 +77,7 @@ export async function signOutAccount() {
   }
 }
 
+// Post APIs
 export async function createPost(post: INewPost) {
   try {
     // Upload file to appwrite storage
@@ -366,6 +348,49 @@ export async function searchPosts(searchTerm: string) {
     if (!posts) throw Error;
 
     return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// User APIs
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await account.get();
+
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.equal('accountId', currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUsers(limit?: number) {
+  const queries = [Query.orderDesc('$createdAt')];
+
+  if (limit) {
+    queries.push(Query.limit(limit));
+  }
+
+  try {
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      queries
+    );
+
+    if (!users) throw Error;
+
+    return users;
   } catch (error) {
     console.log(error);
   }
