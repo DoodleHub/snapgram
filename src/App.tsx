@@ -16,6 +16,7 @@ import Profile from './_root/pages/Profile';
 import UpdateProfile from './_root/pages/UpdateProfile';
 
 import './globals.css';
+import LikedPosts from './_root/pages/LikedPosts';
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/posts/:id" element={<PostDetails />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
+          <Route path="/profile/:id/liked-posts" element={<LikedPosts />} />
         </Route>
       </Routes>
       <Toaster />
